@@ -5,6 +5,17 @@
 from subprocess import check_output, Popen
 import os
 
+def icon(percent):
+    if percent > 80:
+        return "<span font='FontAwesome'>\uf240</span>"
+    if percent > 60:
+        return "<span font='FontAwesome'>\uf241</span>"
+    if percent > 40:
+        return "<span font='FontAwesome'>\uf242</span>"
+    if percent > 20:
+        return "<span font='FontAwesome'>\uf243</span>"
+    return "<span font='FontAwesome'>\uf244</span>"
+
 def color(percent):
     if percent < 5:
         return "#FFFFFF"
@@ -31,12 +42,9 @@ state = status.split(": ")[1].split(", ")[0]
 commasplitstatus = status.split(", ")
 percentleft = int(commasplitstatus[1].rstrip("%\n"))
 
-FA_CHR = "<span font='FontAwesome'>\uf077</span>"
-FA_DIS = "<span font='FontAwesome'>\uf078</span>"
-FA_FULL = "<span font='FontAwesome'>\uf139</span>"
-FA_LIGHTNING = "<span font='FontAwesome'>\uf0e7</span>"
+FA_PLUG = "<span font='FontAwesome'>\uf1e6</span>"
 
-fulltext = "<span color='yellow'>{}</span>".format(FA_LIGHTNING)
+fulltext = ""
 timeleft = state + ", time left:"
 time = commasplitstatus[-1].split()[0]
 time = ":".join(time.split(":")[0:2])
@@ -44,11 +52,12 @@ timeleft += " {}".format(time)
 
 if state == "Discharging":
     form = ' <span color="{}">{}</span>'
-    fulltext += form.format(color(percentleft), FA_DIS)
+    fulltext += form.format(color(percentleft), icon(percentleft))
 elif state == "Charging":
-    fulltext += " " + FA_CHR
+    # TODO charging animation
+    fulltext += " " + icon(percentleft)
 else:
-    fulltext += " " + FA_FULL
+    fulltext += " " + FA_PLUG
 
 form =  '<span color="{}">{}%</span>'
 percent_string = str(percentleft).rjust(3)
